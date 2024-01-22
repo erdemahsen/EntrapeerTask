@@ -1,6 +1,7 @@
 import requests
 import json
 from celery_task import getCorporateByID
+from celery import group
 
 # Define the URL and headers
 url = 'https://ranking.glassdollar.com/graphql'
@@ -101,15 +102,22 @@ while hasNextPage:
 # Since corporate info we got from the pages did not have the start-up partners info,
 # we will get the corporateID's from earlier and use it to find the corporate information 
 # for each corporate one by one. 
+# This process is done in parallel using celery.
 
 all_corporates = []
 counter=0
+tasks = [getCorporateByID.s(corporateID, counter) for counter, corporateID in enumerate(all_corporate_ids, start=1)]
 
-for corporateID in all_corporate_ids:
-    counter += 1
-    #print(counter) # counter just to see the process
-    result = getCorporateByID.delay(corporateID, counter)
-    all_corporates.append(result.get())
+async_result = group(*tasks).apply_async()
+
+# Retrieve results from the group
+results = async_result.get()
+
+# Process the results, this is not the most optimized way since it saves the results in a the all_corporates list
+for result in results:
+    if result:
+        all_corporates.append(result)
+
 
 
 # We save the info to the all_corporates.json file
