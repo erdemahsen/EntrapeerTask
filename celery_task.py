@@ -26,6 +26,7 @@ def getCorporateByID(corporateID, counter):
         if 'data' in data:
             # Extract 'getCorporateCities' data
             current_corporate = data['data'].get('corporate', {})
+            #print("Current Corporate is:", current_corporate)
             return current_corporate
         else:
             print("Unexpected response format. 'data' key not found.")
