@@ -1,6 +1,7 @@
 import spacy
 from sklearn.metrics.pairwise import cosine_similarity
 import json
+import pandas as pd
 
 
 NUMBER_OF_GROUPS = 10 # It has to be less than the number of companies
@@ -34,7 +35,7 @@ description_embeddings = [nlp(description).vector for description in preprocesse
 similarity_matrix = cosine_similarity(description_embeddings, description_embeddings)
 
 # Define a threshold for similarity score to group companies
-threshold = 1
+threshold = 0.9999
 
 # Group companies based on similarity scores
 groups = {}
@@ -48,19 +49,34 @@ for i in range(NUMBER_OF_GROUPS, len(data)):
         if similarity_matrix[i][j] > max_similarity:
             max_similarity = similarity_matrix[i][j]
             max_similarity_index = j
-    
     groups[max_similarity_index].append(i)
-        
-#print(similarity_matrix)
-# Print groups
+
+grouped_companies = []
 
 for group_id, group_members in groups.items():
+    temp_group = []
     print(f"Group {group_id + 1}:")
     for member_id in group_members:
-        print(data[member_id]['name'])
+        temp_group.append([data[member_id]['name'], data[member_id]['description']])
+        print(data[member_id]['name'], data[member_id]['description'])
+    grouped_companies.append(temp_group)
     print()
 
-#print(similarity_matrix[0])
+total = 0
+for group in grouped_companies:
+    total += len(group) 
+    print("Group's members : " + str(len(group)))
+print("Total number of companies : " + str(total))
 
-#print(similarity_matrix[1][100] == similarity_matrix[100][1])
-#print(groups[0], type(groups[0]))
+df = pd.DataFrame()
+
+for i, group in enumerate(grouped_companies, start=1):
+    group_df = pd.DataFrame(group, columns=[f'Group {i} Name', f'Group {i} Description'])
+    df = pd.concat([df, group_df], axis=1)
+
+# Save the DataFrame to an Excel file
+output_excel_file = 'grouped_companies.xlsx'
+df.to_excel(output_excel_file, index=False)
+
+print(f"Data saved to {output_excel_file}")
+
