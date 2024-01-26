@@ -127,7 +127,8 @@ async def fetch_corporates(app):
         print("Done crawling.")
         yield all_corporates
     finally:
-        yield
+        print("Done crawling, finally.")
+        #yield
 
 
 
@@ -136,23 +137,22 @@ async def fetch_corporates(app):
 @app.get("/corporates")
 async def return_corporates():
     # Check if the crawling task is completed
-    try: 
-
-        async with fetch_corporates(app) as all_corporates:
-            if len(all_corporates) == 847:
-                # If task is ready, return the corporates list
-                print("Data is ready.")
-                writeToFile(all_corporates)
-                return all_corporates
-            else:
-                # If task is not ready, return a message indicating the data is not yet available
-                print("Data is not yet available. Please try again later.")
-                return {"message": "Data is not yet available. Please try again later." + str(len(all_corporates))}
-    except Exception as e:
-        print("Error occured while fetching the corporates.")
-        print(e)
-        return all_corporates
-        return {"message": "Error occured while fetching the corporates."}
+    #try: 
+    async with fetch_corporates(app) as all_corporates:
+        if len(all_corporates) == 847:
+            # If task is ready, return the corporates list
+            print("Data is ready.")
+            writeToFile(all_corporates)
+            return all_corporates
+        else:
+            # If task is not ready, return a message indicating the data is not yet available
+            print("Data is not yet available. Please try again later.")
+            return {"message": "Data is not yet available. Please try again later." + str(len(all_corporates))}
+    #except Exception as e:
+    #    print("Error occured while fetching the corporates.")
+   #     print(e)
+        #return all_corporates
+  #      return {"message": "Error occured while fetching the corporates."}
 
 
 def writeToFile(all_corporates):
