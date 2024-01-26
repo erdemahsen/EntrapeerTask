@@ -2,6 +2,9 @@ import spacy
 from sklearn.metrics.pairwise import cosine_similarity
 import json
 
+
+NUMBER_OF_GROUPS = 10 # It has to be less than the number of companies
+
 # Load the English language model in spaCy
 nlp = spacy.load('en_core_web_md')
 
@@ -31,13 +34,24 @@ description_embeddings = [nlp(description).vector for description in preprocesse
 similarity_matrix = cosine_similarity(description_embeddings, description_embeddings)
 
 # Define a threshold for similarity score to group companies
-threshold = 0.90
+threshold = 1
 
 # Group companies based on similarity scores
 groups = {}
-for i in range(len(data)):
-    groups[i] = [j for j, score in enumerate(similarity_matrix[i]) if score > threshold]
+for i in range(NUMBER_OF_GROUPS):
+    groups[i] = [j for j, score in enumerate(similarity_matrix[i]) if score >= threshold]
 
+for i in range(NUMBER_OF_GROUPS, len(data)):
+    max_similarity = 0
+    max_similarity_index = 0
+    for j in range(NUMBER_OF_GROUPS):
+        if similarity_matrix[i][j] > max_similarity:
+            max_similarity = similarity_matrix[i][j]
+            max_similarity_index = j
+    
+    groups[max_similarity_index].append(i)
+        
+#print(similarity_matrix)
 # Print groups
 
 for group_id, group_members in groups.items():
@@ -45,4 +59,8 @@ for group_id, group_members in groups.items():
     for member_id in group_members:
         print(data[member_id]['name'])
     print()
-print(data[0]['name'])
+
+#print(similarity_matrix[0])
+
+#print(similarity_matrix[1][100] == similarity_matrix[100][1])
+#print(groups[0], type(groups[0]))
