@@ -20,6 +20,12 @@ docker compose up -d
 ```
 docker exec -it server bash
 ```
+```
+docker exec -it server bash
+```
+```
+docker exec -it server bash
+```
 6 - In the first terminal type the following command to run Celery task :
 ```
 celery -A celery_task worker --loglevel=INFO
