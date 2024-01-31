@@ -19,6 +19,7 @@ WORKDIR /root
 # Copy application code and install dependencies
 COPY . .
 RUN pip install --no-cache-dir -r requirements.txt
+RUN python3 -m spacy download en_core_web_md
 
 # Start RabbitMQ as a service
 CMD service rabbitmq-server start && sleep infinity
