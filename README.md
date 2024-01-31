@@ -49,6 +49,14 @@ Code above will use the data from "all_corporates.json", and classify the corpor
 
 ## Some information about the program
 
+- After 2th step you can use the following command to remove precalculated "all_corporates.json" and "grouped_companies.xlxs".
+Since all of the files are copied to docker, we may want to calculate the results in docker using the instructions above.
+```
+rm grouped_companies.xlxs
+```
+```
+rm all_corporates.json
+```
 - If you have done the instructions above correctly you will have "all_corporates.json" and "grouped_companies.xlxs" files created in the docker.
 - You can use "ls" command to see the files in the directory. 
 - You can check all_corporates.json for all of the corporates data, and check grouped_companies.xlxs to see the corporates in groups.
