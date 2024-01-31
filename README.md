@@ -40,6 +40,7 @@ http://localhost:8000/corporates
 ```
 Allow some time for the corporates to load. Requests will be displayed in the Celery terminal.
 At the end of this process on the browser you will see a list of corporates with all of the fetched information, and also this information will be saved in json format to "all_corporates.json" file.
+
 9 - Now go to the third terminal and enter the following code to do the Machine Learning task.
 ```
 python3 groupCompanies.py
