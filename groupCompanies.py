@@ -63,9 +63,11 @@ for group_id, group_members in groups.items():
     print()
 
 total = 0
+groupNumber = 0
 for group in grouped_companies:
+    groupNumber += 1
     total += len(group) 
-    print("Group's members : " + str(len(group)))
+    print("Group " + str(groupNumber) +" has "+ str(len(group)) +" members.")
 print("Total number of companies : " + str(total))
 
 df = pd.DataFrame()
